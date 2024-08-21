@@ -1,0 +1,40 @@
+/* Style for the new post container */
+.new-post {
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #E1E8ED;
+    border-radius: 10px;
+    background-color: #F5F8FA;
+
+    
+
+}
+.all-posts{
+    margin: 10px;
+    justify-content: flex-start;
+    flex-direction: column;
+    display: flex;   
+}
+.post{
+    justify-self: center;
+    border: 1px solid gray;
+    display: flex;
+    flex-direction: column;
+    margin: 5px 0.5px;
+    padding: 20px;
+    background-color: #F5F8FA;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+.content{
+    font-size: 20px;
+    font-family:Arial, Helvetica, sans-serif;
+}
+.username{
+    font-size: 22px;
+
+}
+.date{
+    color: grey;
+
+}
