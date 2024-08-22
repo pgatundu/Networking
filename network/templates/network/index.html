@@ -1,13 +1,13 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    <h1>All Posts</h1>
+    <h3>All Posts</h3>
     {% if user.is_authenticated %}
         <div class="new-post mx-3">
             <h4>New Post</h4>
             <form action="{% url 'newPost' %}" method="post">
                 {% csrf_token %}
-                <textarea name="content" row="20" cols="150"></textarea>
+                <textarea name="content" row="20" cols="100"></textarea>
                 <br />
                 <input type="submit" value="Post" class="btn btn-primary" />
             </form>
@@ -17,7 +17,7 @@
     <div class="all-posts">
         {% for post in posts_of_the_page %}
             <div class="row post">
-                <h5 class="username">@{{ post.user }}</h5>
+                <h5 class="username"><a href="{% url 'profile' user_id=post.user.id %}">@{{ post.user }}</a></h5>
                 <h6 class="content">{{ post.content }}</h6>
                 <p class="date">{{ post.date }}</p>
             </div>

@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import Paginator
 
-from .models import User,Post
+from .models import User,Post,Follow
 
 
 def index(request):
@@ -32,6 +32,20 @@ def newPost(request):
 def profile(request, user_id):
   user = User.objects.get(pk=user_id)
   allPosts = Post.objects.filter(user=user).order_by("id").reverse()
+
+  following = Follow.objects.filter(user=user)
+  followers = Follow.objects.filter(user_follower=user)
+
+  try:
+      checkFollow = followers.filter(user=User.objects.get(pk=request.user.id))
+      if len(checkFollow) != 0:
+          isFollowing = True
+      else:
+          isFollowing = False
+      
+  except:
+      isFollowing = False
+
   # Paginator
   paginator = Paginator(allPosts, 10)
   page_number = request.GET.get('page')
@@ -39,9 +53,30 @@ def profile(request, user_id):
   return render(request, "network/profile.html",{
                     "allPosts": allPosts,
                     "posts_of_the_page": posts_of_the_page,
-                    "username": user.username
+                    "username": user.username,
+                    "following": following,
+                    "followers": followers,
+                    "isFollowing": isFollowing,
+                    "user_profile": user
                 })
 
+def follow(request):
+    userfollow = request.POST['userfollow']
+    currentUser = User.objects.get(pk=request.user.id)
+    userfollowData = User.objects.get(username=userfollow)
+    f = Follow(user=currentUser, user_follower=userfollowData)
+    f.save()
+    user_id = userfollowData.id 
+    return HttpResponseRedirect(reverse(profile, kwargs={'user_id': user_id}))
+
+def unfollow(request):
+    userfollow = request.POST['userfollow']
+    currentUser = User.objects.get(pk=request.user.id)
+    userfollowData = User.objects.get(username=userfollow)
+    f = Follow.objects.get(user=currentUser, user_follower=userfollowData)
+    f.delete()
+    user_id = userfollowData.id 
+    return HttpResponseRedirect(reverse(profile, kwargs={'user_id': user_id}))
 
 def login_view(request):
     if request.method == "POST":
