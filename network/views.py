@@ -4,8 +4,19 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import Paginator
-
+import json
+from django.http import JsonResponse
 from .models import User,Post,Follow
+
+def edit(request,post_id):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        edit_post = Post.objects.get(pk=post_id)
+        edit_post.content = data["content"]
+        edit_post.save()
+        return JsonResponse({"message": "Change Successful", "data": data["content"]})
+
+
 
 
 def index(request):
@@ -60,6 +71,25 @@ def profile(request, user_id):
                     "user_profile": user
                 })
 
+def following(request):
+    currentUser = User.objects.get(pk=request.user.id)
+    followingPeople = Follow.objects.filter(user=currentUser)
+    allPosts = Post.objects.all().order_by('id').reverse()
+
+    follwingPosts =[]
+    for post in allPosts:
+        for person in followingPeople:
+            if person.user_follower == post.user:
+                follwingPosts.append(post)
+
+     # Paginator
+    paginator = Paginator(follwingPosts, 10)
+    page_number = request.GET.get('page')
+    posts_of_the_page = paginator.get_page(page_number)
+    return render(request, "network/following.html",{
+                      "posts_of_the_page": posts_of_the_page
+                  })
+
 def follow(request):
     userfollow = request.POST['userfollow']
     currentUser = User.objects.get(pk=request.user.id)
@@ -77,6 +107,7 @@ def unfollow(request):
     f.delete()
     user_id = userfollowData.id 
     return HttpResponseRedirect(reverse(profile, kwargs={'user_id': user_id}))
+
 
 def login_view(request):
     if request.method == "POST":
