@@ -1,40 +1,124 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-<h4>@{{ username }}</h4>
+<script>
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length == 2) return parts.pop().split(';').shift();
+    }
 
-<div class="container">
-    <div class="row d-flex justify-content-center">
-        <h4 class="col-4">Following:{{ following.count }}</h4>
-        <h4 class="col-4">Followers:{{ followers.count }} </h4>
-        {% if user.is_authenticated %}
-            {% if user != user_profile %}
-                {% if isFollowing %}
-                    <form action="{% url 'unfollow' %}" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="userfollow" value="{{ user_profile }}"/>
-                        <input type="submit" class="btn btn-outline-danger" value="Unfollow"/>
-                    </form>
-                {% else %}
-                    <form action="{% url 'follow' %}"  method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="userfollow" value="{{ user_profile }}" />
-                        <input type="submit" class="btn btn-outline-success" value="Follow" />
-                    </form>
-                {% endif %}
-            {% endif %}
-        {% endif %}
-    </div>
+    function submitHandler(id) {
+        const textareaValue = document.getElementById(`textarea_${id}`).value;
+        const content = document.getElementById(`content_${id}`);
+        const modal = document.getElementById(`modal_edit_post_${id}`);
+
+        fetch(`/edit/${id}`, {
+            method: "POST",
+            headers: { "Content-tpye": "application/json", "X-CSRFToken": getCookie("csrftoken") },
+            body: JSON.stringify({
+                content: textareaValue
+            })
+        })
+            .then(response => response.json())
+            .then(result => {
+                content.innerHTML = result.data;
+
+                modal.classList.remove('show');
+                modal.setAttribute('aria-hidden', 'true');
+                modal.setAttribute('style', 'dispaly: none');
+
+                //modal backdrops
+
+                const modalsBackdrops = document.getElementsByClassName('modal-backdrop');
+
+                for (let i = 0; i < modalsBackdrops.length; i++) {
+                    document.body.removeChild(modalsBackdrops[i]);
+                }
+            });
+    }
+
+    function likeHandler(id, whoYouLiked) {
+
+    }
+
+    function deletePost(postId) {
+        if (confirm("Are you sure you want to delete this post?")) {
+            fetch(`/delete_post/${postId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}', // Use Django's CSRF token
+                },
+                body: JSON.stringify({
+                    id: postId
+                }),
+            })
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById(`content_${postId}`).closest('.post').remove();
+                    } else {
+                        alert("Failed to delete post.");
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    }
+
+</script>
+
+<h3>All Posts</h3>
+{% if user.is_authenticated %}
+<div class="new-post">
+    <h4>New Post</h4>
+    <form action="{% url 'newPost' %}" method="post">
+        {% csrf_token %}
+        <textarea name="content" cols="150" placeholder="What's on your mind?"></textarea>
+        <br />
+        <input type="submit" value="Post" class="btn btn-outline-primary btn-sm" />
+    </form>
 </div>
+{% endif %}
 
 <div class="all-posts">
     {% for post in posts_of_the_page %}
-    <div class="row post">
+    <div class="cols post">
         <h5 class="username"><a href="{% url 'profile' user_id=post.user.id %}">@{{ post.user }}</a></h5>
-        <h6 class="content">{{ post.content }}</h6>
+        <h6 class="content" id="content_{{ post.id }}">{{ post.content }}</h6>
         <p class="date">{{ post.date }}</p>
+        {% if user.is_authenticated %}
+        {% if user == post.user %}
+        <div class="d-flex justify-content-aroud">
+            <button class="btn btn-outline-primary btn-sm" data-toggle="modal"
+                data-target="#modal_edit_post_{{post.id}}">Edit</button>
+            <button class="btn btn-outline-danger btn-sm" onclick="deletePost({{ post.id }})">Delete</button>
+        </div>
+        <div class="modal" id="modal_edit_post_{{post.id}}" tabindex="-1" role="dialog"
+            aria-labelledby="modal_edit_post_{{post.id}}" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Post</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <textarea class="form-control" rows="5" id="textarea_{{ post.id }}"
+                            name="content">{{ post.content }}</textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-primary btn-sm"
+                            onclick="submitHandler({{ post.id }})">Save changes</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm"
+                            data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endif %}
     </div>
-
     {% endfor %}
 </div>
 

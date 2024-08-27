@@ -6,7 +6,34 @@ from django.urls import reverse
 from django.core.paginator import Paginator
 import json
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
 from .models import User,Post,Follow,Like
+
+def delete_post(request, post_id):
+    if request.method == 'POST':
+        post = get_object_or_404(Post, id=post_id, user=request.user)
+        post.delete()
+        return JsonResponse({'status': 'Post deleted successfully'})
+    return JsonResponse({'status': 'Invalid request'}, status=400)
+
+def like_post(request, post_id):
+    if request.method == 'POST':
+        post = get_object_or_404(Post, id=post_id)
+        if request.user.is_authenticated:
+            if post.likes.filter(id=request.user.id).exists():
+                post.likes.remove(request.user)
+                liked = False
+            else:
+                post.likes.add(request.user)
+                liked = True
+            post.save()
+            return JsonResponse({
+                'status': 'success',
+                'liked': liked,
+                'like_count': post.likes.count()
+            })
+    return JsonResponse({'status': 'failed'}, status=400)
 
 def edit(request,post_id):
     if request.method == "POST":

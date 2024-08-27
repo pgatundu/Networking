@@ -1,21 +1,295 @@
-.new-post {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
+.new-post textarea {
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    resize: vertical;
 }
 
+.new-post textarea:focus {
+    border-color: #007bff;
+    outline: none;
+    background-color: #fff;
+}
+h3 {
+    font-family:'Helvetica Neue', Arial, sans-serif ;
+    font-size: 24px;
+    color: #77aadf;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #007bff;
+    display: inline-block;
+    padding-bottom: 3px;
+}
+/* Container for the entire post */
 .post {
-    border: 01.px solid gray;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    box-sizing: border-box;
+    border: 1px solid #e1e8ed;
+    /* Light gray border */
+    border-radius: 10px;
+    /* Slightly rounded corners */
+    padding: 15px;
+    /* Spacing inside the post */
+    margin-bottom: 5px;
+    /* Space between posts */
+    background-color: #ffffff;
+    /* White background */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow for depth */
 }
 
-.allpost {
+/* Username styling */
+.username {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    /* Twitter's font style */
+    font-size: 16px;
+    /* Font size for the username */
+    font-weight: bold;
+    /* Bold text */
+    color: #1da1f2;
+    /* Twitter's blue color for links */
+    margin-bottom: 5px;
+    /* Space below the username */
+}
+
+/* Username link styling */
+.username a {
+    text-decoration: none;
+    /* Remove underline from the link */
+    color: inherit;
+    /* Inherit the color from .username */
+}
+
+/* Content styling */
+.content {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    /* Twitter's font style */
+    font-size: 14px;
+    /* Font size for the content */
+    line-height: 1.5;
+    /* Line height for readability */
+    color: #14171a;
+    /* Twitter's primary text color */
+    margin-bottom: 5px;
+    /* Space below the content */
+}
+
+/* Date styling */
+.date {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    /* Twitter's font style */
+    font-size: 12px;
+    /* Smaller font size for the date */
+    color: #657786;
+    /* Gray color for the date */
+    margin-bottom: 10px;
+    /* Space below the date */
+}
+
+/* Edit button container */
+.d-flex.justify-content-around {
+    margin-top: 10px;
+    /* Space above the edit button */
+}
+
+/* Edit button styling */
+.btn-outline-primary.btn-sm {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    /* Font style */
+    font-size: 12px;
+    /* Small font size */
+    border-color: #1da1f2;
+    /* Twitter's blue color for the border */
+    color: #1da1f2;
+    /* Twitter's blue color for the text */
+    border-radius: 15px;
+    /* Rounded button */
+    padding: 5px 10px;
+    /* Padding for the button */
+}
+
+.btn-outline-primary.btn-sm:hover {
+    background-color: #1da1f2;
+    /* Blue background on hover */
+    color: #ffffff;
+    /* White text on hover */
+}
+/* Modal background */
+.modal-content {
+    border-radius: 10px;
+    /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow */
+    border: none;
+    /* Remove border */
+}
+
+/* Modal header */
+.modal-header {
+    background-color: #1da1f2;
+    /* Twitter's blue color */
+    color: #fff;
+    /* White text color */
+    border-bottom: none;
+    /* Remove default border */
+    border-top-left-radius: 10px;
+    /* Top-left corner rounded */
+    border-top-right-radius: 10px;
+    /* Top-right corner rounded */
+}
+
+/* Modal title */
+.modal-title {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    /* Twitter's font style */
+    font-size: 18px;
+    /* Font size */
+    font-weight: bold;
+    /* Bold text */
+}
+
+/* Close button styling */
+.close {
+    color: #fff;
+    /* White color for the close button */
+    opacity: 1;
+    /* Fully opaque */
+}
+
+.close:hover {
+    color: #ffcccb;
+    /* Light red on hover */
+}
+
+/* Modal body */
+.modal-body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    /* Twitter's font style */
+    font-size: 14px;
+    /* Font size */
+    color: #14171a;
+    /* Twitter's primary text color */
+}
+
+/* Textarea styling */
+.form-control {
+    border-radius: 8px;
+    /* Rounded corners for the textarea */
+    border: 1px solid #e1e8ed;
+    /* Light gray border */
+    padding: 10px;
+    /* Inner padding */
+    font-size: 14px;
+    /* Font size */
+    box-shadow: none;
+    /* Remove default shadow */
+}
+
+/* Modal footer */
+.modal-footer {
+    background-color: #f1f1f1;
+    /* Light gray background for the footer */
+    border-top: none;
+    /* Remove default border */
+    border-bottom-left-radius: 10px;
+    /* Bottom-left corner rounded */
+    border-bottom-right-radius: 10px;
+    /* Bottom-right corner rounded */
+}
+
+/* Buttons in the modal */
+.modal-footer .btn {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    /* Twitter's font style */
+    font-size: 12px;
+    /* Small font size */
+    padding: 5px 15px;
+    /* Padding for buttons */
+    border-radius: 15px;
+    /* Rounded button corners */
+}
+
+/* Primary button styling */
+.modal-footer .btn-outline-primary {
+    border-color: #1da1f2;
+    /* Border color */
+    color: #1da1f2;
+    /* Text color */
+}
+
+.modal-footer .btn-outline-primary:hover {
+    background-color: #1da1f2;
+    /* Blue background on hover */
+    color: #fff;
+    /* White text on hover */
+}
+
+/* Secondary button styling */
+.modal-footer .btn-outline-secondary {
+    border-color: #657786;
+    /* Gray border color */
+    color: #657786;
+    /* Gray text color */
+}
+
+.modal-footer .btn-outline-secondary:hover {
+    background-color: #657786;
+    /* Gray background on hover */
+    color: #fff;
+    /* White text on hover */
+}
+
+/* Delete button styling */
+.btn-outline-danger {
+    border-color: #dc3545;
+    /* Red border color for the delete button */
+    color: #dc3545;
+    /* Red text color */
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+        /* Font style */
+    font-size: 12px;
+    /* Small font size */
+    border-color: #dc4111;
+    color:red#1da1f2;  
+    border-radius: 15px;
+    /* Rounded button */
+    padding: 5px 10px;
+    /* Padding for the button */
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    /* Red background on hover */
+    color: #fff;
+    /* White text on hover */
+}
+.btn.like-button {
     display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
-    margin: 20px;
+    align-items: center;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #262626;
+    /* Default color */
+    font-size: 24px;
+    /* Adjust as needed */
+}
+
+.btn.like-button i {
+    transition: color 0.3s ease;
+}
+
+.btn.like-button.liked {
+    color: #e0245e;
+    /* Instagram red */
+}
+
+.btn.like-button span {
+    margin-left: 5px;
+    font-size: 16px;
 }
