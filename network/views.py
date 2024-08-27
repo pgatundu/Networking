@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.core.paginator import Paginator
 import json
 from django.http import JsonResponse
-from .models import User,Post,Follow
+from .models import User,Post,Follow,Like
 
 def edit(request,post_id):
     if request.method == "POST":
@@ -27,9 +27,21 @@ def index(request):
     page_number = request.GET.get('page')
     posts_of_the_page = paginator.get_page(page_number)
 
+    allLikes = Like.objects.all()
+
+    whoYouLiked = []
+    try:
+        for like in allLikes:
+            if like.user.id == request.user.id:
+                whoYouLiked.append(like.post.id)
+    except:
+        whoYouLiked =[]
+
+
     return render(request, "network/index.html",{
                       "allPosts": allPosts,
-                      "posts_of_the_page": posts_of_the_page
+                      "posts_of_the_page": posts_of_the_page,
+                      "whoYouLiked": whoYouLiked
                   })
 
 def newPost(request):

@@ -37,21 +37,26 @@
                 }               
             })            
         }
+
+        function likeHandler(id, whoYouLiked){
+
+        }
     </script>
+    
     <h3>All Posts</h3>
     {% if user.is_authenticated %}
-        <div class="new-post mx-3">
+        <div class="new-post">
             <h4>New Post</h4>
             <form action="{% url 'newPost' %}" method="post">
                 {% csrf_token %}
-                <textarea name="content" row="20" cols="100"></textarea>
+                <textarea name="content"  cols="150" placeholder="What's on your mind?"></textarea>
                 <br />
                 <input type="submit" value="Post" class="btn btn-outline-primary" />
             </form>
         </div>            
     {% endif %}
 
-    <div class="all-posts">
+    <div class="all-posts" >
         {% for post in posts_of_the_page %}
             <div class="row post">
                 <h5 class="username"><a href="{% url 'profile' user_id=post.user.id %}">@{{ post.user }}</a></h5>
