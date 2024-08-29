@@ -46,13 +46,12 @@ h3 {
 /* Username styling */
 .username {
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    /* Twitter's font style */
+
     font-size: 16px;
     /* Font size for the username */
     font-weight: bold;
     /* Bold text */
     color: #1da1f2;
-    /* Twitter's blue color for links */
     margin-bottom: 5px;
     /* Space below the username */
 }
@@ -68,21 +67,18 @@ h3 {
 /* Content styling */
 .content {
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    /* Twitter's font style */
     font-size: 14px;
     /* Font size for the content */
     line-height: 1.5;
     /* Line height for readability */
     color: #14171a;
-    /* Twitter's primary text color */
-    margin-bottom: 5px;
+     margin-bottom: 5px;
     /* Space below the content */
 }
 
 /* Date styling */
 .date {
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    /* Twitter's font style */
     font-size: 12px;
     /* Smaller font size for the date */
     color: #657786;
@@ -102,11 +98,8 @@ h3 {
     font-family: 'Helvetica Neue', Arial, sans-serif;
     /* Font style */
     font-size: 12px;
-    /* Small font size */
     border-color: #1da1f2;
-    /* Twitter's blue color for the border */
     color: #1da1f2;
-    /* Twitter's blue color for the text */
     border-radius: 15px;
     /* Rounded button */
     padding: 5px 10px;
@@ -279,17 +272,40 @@ h3 {
     font-size: 24px;
     /* Adjust as needed */
 }
+body {
+    font-family: Arial, sans-serif;
+    justify-content: center;
+    align-items: right;
+    background-color: #f0f0f0;
+}
 
-.btn.like-button i {
+.post {
+    margin-bottom: 20px;
+}
+
+.like-container {
+    display: flex;
+    align-items: center;
+}
+
+.like-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    font-size: 2rem;
+    color: #ccc;
+    /* Grey color for unliked state */
     transition: color 0.3s ease;
 }
 
-.btn.like-button.liked {
-    color: #e0245e;
-    /* Instagram red */
+.like-button.liked i {
+    color: #e74c3c;
+    /* Red color for liked state */
 }
 
-.btn.like-button span {
-    margin-left: 5px;
-    font-size: 16px;
+.like-count {
+    margin-left: 10px;
+    font-size: 1.5rem;
+    color: #333;
 }

@@ -1,12 +1,12 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import Paginator
 import json
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from .models import User,Post,Follow,Like
 
@@ -17,24 +17,34 @@ def delete_post(request, post_id):
         return JsonResponse({'status': 'Post deleted successfully'})
     return JsonResponse({'status': 'Invalid request'}, status=400)
 
-def like_post(request, post_id):
-    if request.method == 'POST':
-        post = get_object_or_404(Post, id=post_id)
-        if request.user.is_authenticated:
-            if post.likes.filter(id=request.user.id).exists():
-                post.likes.remove(request.user)
-                liked = False
-            else:
-                post.likes.add(request.user)
-                liked = True
-            post.save()
-            return JsonResponse({
-                'status': 'success',
-                'liked': liked,
-                'like_count': post.likes.count()
-            })
-    return JsonResponse({'status': 'failed'}, status=400)
+def toggle_like(request, post_id):
+    post = Post.objects.get(id=post_id)
+    user = request.user
 
+    like, created = Like.objects.get_or_create(post=post, user=user)
+
+    # Toggle the liked status
+    like.liked = not like.liked
+    like.save()
+
+    # Count the total number of likes for the post
+    like_count = Like.objects.filter(post=post, liked=True).count()
+
+    return JsonResponse({'like_count': like_count, 'user_liked': like.liked})
+
+@login_required
+def get_like_status(request, post_id):
+    post = Post.objects.get(id=post_id)
+    user = request.user
+
+    like_count = Like.objects.filter(post=post, liked=True).count()
+    user_liked = Like.objects.filter(post=post, user=user, liked=True).exists()
+
+    return JsonResponse({'like_count': like_count, 'user_liked': user_liked})
+
+
+
+                        
 def edit(request,post_id):
     if request.method == "POST":
         data = json.loads(request.body)
