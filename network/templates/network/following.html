@@ -8,10 +8,17 @@
                 <h5 class="username"><a href="{% url 'profile' user_id=post.user.id %}">@{{ post.user }}</a></h5>
                 <h6 class="content">{{ post.content }}</h6>
                 <p class="date">{{ post.date }}</p>
+                
+                <button id="like-button-{{ post.id }}" class="like-button" onclick="toggleLike({{ post.id }}, this)">
+                        <i class="fa-regular fa-heart heart-icon {% if post.id in whoYouLiked %}liked{% endif %}"></i>
+                </button>
+                    <span id="like-count-{{ post.id }}" class="like-count">{{ post.likes.count }}</span>
+            
             </div>
             
         {% endfor %}
     </div>
+   
 
     <nav aria-label="Page navigation example">
         <ul class="pagination d flex justify-content-center">

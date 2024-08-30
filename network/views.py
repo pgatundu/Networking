@@ -5,10 +5,13 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import Paginator
 import json
+from django import template
 from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 from .models import User,Post,Follow,Like
+
+register = template.Library()
 
 def delete_post(request, post_id):
     if request.method == 'POST':
@@ -16,31 +19,6 @@ def delete_post(request, post_id):
         post.delete()
         return JsonResponse({'status': 'Post deleted successfully'})
     return JsonResponse({'status': 'Invalid request'}, status=400)
-
-def toggle_like(request, post_id):
-    post = Post.objects.get(id=post_id)
-    user = request.user
-
-    like, created = Like.objects.get_or_create(post=post, user=user)
-
-    # Toggle the liked status
-    like.liked = not like.liked
-    like.save()
-
-    # Count the total number of likes for the post
-    like_count = Like.objects.filter(post=post, liked=True).count()
-
-    return JsonResponse({'like_count': like_count, 'user_liked': like.liked})
-
-@login_required
-def get_like_status(request, post_id):
-    post = Post.objects.get(id=post_id)
-    user = request.user
-
-    like_count = Like.objects.filter(post=post, liked=True).count()
-    user_liked = Like.objects.filter(post=post, user=user, liked=True).exists()
-
-    return JsonResponse({'like_count': like_count, 'user_liked': user_liked})
 
 
 
@@ -53,33 +31,34 @@ def edit(request,post_id):
         edit_post.save()
         return JsonResponse({"message": "Change Successful", "data": data["content"]})
 
-
-
-
 def index(request):
-    allPosts = Post.objects.all().order_by("id").reverse()
+    allPosts = Post.objects.all().order_by("-id")
 
-    # Paginator
     paginator = Paginator(allPosts, 10)
     page_number = request.GET.get('page')
     posts_of_the_page = paginator.get_page(page_number)
 
-    allLikes = Like.objects.all()
+    like_counts = {}
+    for post in allPosts:
+        like_counts[post.id] = post.likes.filter(liked=True).count()
 
+    allLikes = Like.objects.all()
     whoYouLiked = []
     try:
         for like in allLikes:
             if like.user.id == request.user.id:
                 whoYouLiked.append(like.post.id)
     except:
-        whoYouLiked =[]
+        whoYouLiked = []
+
+    return render(request, "network/index.html", {
+        "allPosts": allPosts,
+        "posts_of_the_page": posts_of_the_page,
+        "whoYouLiked": whoYouLiked,
+        "like_counts": like_counts
+    })
 
 
-    return render(request, "network/index.html",{
-                      "allPosts": allPosts,
-                      "posts_of_the_page": posts_of_the_page,
-                      "whoYouLiked": whoYouLiked
-                  })
 
 def newPost(request):
     if request.method == "POST":
@@ -119,6 +98,28 @@ def profile(request, user_id):
                     "isFollowing": isFollowing,
                     "user_profile": user
                 })
+
+
+def toggle_like(request, post_id):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        action = data.get('action')
+        user = request.user
+        post = Post.objects.get(id=post_id)
+
+        if action == 'like':
+            like, created = Like.objects.get_or_create(post=post, user=user)
+            if not created:
+                return JsonResponse({'success': False, 'error': 'Already liked'})
+        elif action == 'unlike':
+            Like.objects.filter(post=post, user=user).delete()
+        else:
+            return JsonResponse({'success': False, 'error': 'Invalid action'})
+
+        like_count = post.likes.filter(liked=True).count()
+        return JsonResponse({'success': True, 'like_count': like_count})
+    
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 def following(request):
     currentUser = User.objects.get(pk=request.user.id)
@@ -208,3 +209,9 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+
+
+def get_item(dictionary, key):
+    return dictionary.get(key)
+

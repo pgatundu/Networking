@@ -25,9 +25,9 @@ class Follow(models.Model):
         return f"{self.user} is following {self.user_follower}" 
     
 class Like(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    liked = models.BooleanField(default=False)
+    liked = models.BooleanField(default=True)
 
     class Meta:
         unique_together = ('post', 'user')  # Ensures a user can only like/unlike a post once
