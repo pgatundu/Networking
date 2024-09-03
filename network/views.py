@@ -7,8 +7,6 @@ from django.core.paginator import Paginator
 import json
 from django import template
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
-from django.views.decorators.csrf import csrf_exempt
 from .models import User,Post,Follow,Like
 
 register = template.Library()
@@ -102,25 +100,25 @@ def profile(request, user_id):
                     "user_profile": user
                 })
 
-
 def following(request):
     currentUser = User.objects.get(pk=request.user.id)
     followingPeople = Follow.objects.filter(user=currentUser)
     allPosts = Post.objects.all().order_by('id').reverse()
 
-    follwingPosts =[]
+    followingPosts = []
     for post in allPosts:
         for person in followingPeople:
             if person.user_follower == post.user:
-                follwingPosts.append(post)
-
+                followingPosts.append(post)
      # Paginator
-    paginator = Paginator(follwingPosts, 10)
+    paginator = Paginator(followingPosts, 10)
     page_number = request.GET.get('page')
     posts_of_the_page = paginator.get_page(page_number)
+
     return render(request, "network/following.html",{
-                      "posts_of_the_page": posts_of_the_page
-                  })
+                    "posts_of_the_page": posts_of_the_page,
+                   
+                })
 
 def follow(request):
     userfollow = request.POST['userfollow']
@@ -130,6 +128,7 @@ def follow(request):
     f.save()
     user_id = userfollowData.id 
     return HttpResponseRedirect(reverse(profile, kwargs={'user_id': user_id}))
+
 
 def unfollow(request):
     userfollow = request.POST['userfollow']
@@ -191,9 +190,3 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
-
-
-
-def get_item(dictionary, key):
-    return dictionary.get(key)
-

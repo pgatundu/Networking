@@ -3,7 +3,34 @@
 {% block body %}
 
 
-<h3>All Posts</h3>
+<h3>{{ username }}</h3>
+
+<div class="container">
+    <div class="row d-flex justify-content-center ">
+        <h4 class="col-4">Followers: {{ followers.count }} </h4>
+        <h4 class="col-4">Following:{{ following.count }} </h4>
+        {% if user.is_authenticated %}
+            {% if user != user_profile %}
+                {% if isFollowing %}
+                    <form action="{% url 'unfollow'%}" method="post">                       
+                        {% csrf_token %}
+                        <input type="hidden" name="userfollow" value="{{ user_profile }}"/>
+                        <input type="submit" value="Unfollow">
+                    </form>
+                {% else %}
+                    <form action="{% url 'follow' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="userfollow" value="{{ user_profile }}" />
+                        <input type="submit" value="Follow">
+                    </form>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
+    </div>
+
+</div> 
+
 
 <div class="all-posts">
     {% for post in posts_of_the_page %}
