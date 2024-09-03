@@ -13,15 +13,21 @@ from .models import User,Post,Follow,Like
 
 register = template.Library()
 
-def delete_post(request, post_id):
-    if request.method == 'POST':
-        post = get_object_or_404(Post, id=post_id, user=request.user)
-        post.delete()
-        return JsonResponse({'status': 'Post deleted successfully'})
-    return JsonResponse({'status': 'Invalid request'}, status=400)
 
 
+def remove_like(request, post_id):
+    post = Post.objects.get(pk=post_id)
+    user = User.objects.get(pk=request.user.id)
+    like = Like.objects.filter(user=user, post=post)
+    like.delete()
+    return JsonResponse({"message": "Like removed"})
 
+def add_like(request, post_id):
+    post = Post.objects.get(pk=post_id)
+    user = User.objects.get(pk=request.user.id)
+    newLike = Like(user=user, post=post)
+    newLike.save()
+    return JsonResponse({"message": "Like added"})
                         
 def edit(request,post_id):
     if request.method == "POST":
@@ -38,11 +44,8 @@ def index(request):
     page_number = request.GET.get('page')
     posts_of_the_page = paginator.get_page(page_number)
 
-    like_counts = {}
-    for post in allPosts:
-        like_counts[post.id] = post.likes.filter(liked=True).count()
-
     allLikes = Like.objects.all()
+
     whoYouLiked = []
     try:
         for like in allLikes:
@@ -51,11 +54,11 @@ def index(request):
     except:
         whoYouLiked = []
 
+
     return render(request, "network/index.html", {
         "allPosts": allPosts,
         "posts_of_the_page": posts_of_the_page,
-        "whoYouLiked": whoYouLiked,
-        "like_counts": like_counts
+        "whoYouLiked": whoYouLiked
     })
 
 
@@ -99,27 +102,6 @@ def profile(request, user_id):
                     "user_profile": user
                 })
 
-
-def toggle_like(request, post_id):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        action = data.get('action')
-        user = request.user
-        post = Post.objects.get(id=post_id)
-
-        if action == 'like':
-            like, created = Like.objects.get_or_create(post=post, user=user)
-            if not created:
-                return JsonResponse({'success': False, 'error': 'Already liked'})
-        elif action == 'unlike':
-            Like.objects.filter(post=post, user=user).delete()
-        else:
-            return JsonResponse({'success': False, 'error': 'Invalid action'})
-
-        like_count = post.likes.filter(liked=True).count()
-        return JsonResponse({'success': True, 'like_count': like_count})
-    
-    return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 def following(request):
     currentUser = User.objects.get(pk=request.user.id)

@@ -14,6 +14,8 @@
     outline: none;
     background-color: #fff;
 }
+
+
 h3 {
     font-family:'Helvetica Neue', Arial, sans-serif ;
     font-size: 24px;
@@ -30,67 +32,40 @@ h3 {
 /* Container for the entire post */
 .post {
     border: 1px solid #e1e8ed;
-    /* Light gray border */
     border-radius: 10px;
-    /* Slightly rounded corners */
     padding: 15px;
-    /* Spacing inside the post */
-    margin-bottom: 5px;
-    /* Space between posts */
+    margin-bottom: 2px;
     background-color: #ffffff;
-    /* White background */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    /* Subtle shadow for depth */
 }
 
 /* Username styling */
 .username {
     font-family: 'Helvetica Neue', Arial, sans-serif;
-
     font-size: 16px;
-    /* Font size for the username */
-    font-weight: bold;
-    /* Bold text */
     color: #1da1f2;
-    margin-bottom: 5px;
-    /* Space below the username */
-}
-
-/* Username link styling */
-.username a {
-    text-decoration: none;
-    /* Remove underline from the link */
-    color: inherit;
-    /* Inherit the color from .username */
+    margin-bottom: 2px;
 }
 
 /* Content styling */
 .content {
     font-family: 'Helvetica Neue', Arial, sans-serif;
     font-size: 14px;
-    /* Font size for the content */
-    line-height: 1.5;
-    /* Line height for readability */
     color: #14171a;
-     margin-bottom: 5px;
-    /* Space below the content */
+    margin-bottom: 5px;
 }
 
 /* Date styling */
 .date {
     font-family: 'Helvetica Neue', Arial, sans-serif;
     font-size: 12px;
-    /* Smaller font size for the date */
     color: #657786;
-    /* Gray color for the date */
     margin-bottom: 10px;
-    /* Space below the date */
 }
 
 /* Edit button container */
 .d-flex.justify-content-around {
     margin-top: 10px;
-    /* Space above the edit button */
 }
 
 /* Edit button styling */
@@ -186,123 +161,38 @@ h3 {
 /* Modal footer */
 .modal-footer {
     background-color: #f1f1f1;
-    /* Light gray background for the footer */
     border-top: none;
-    /* Remove default border */
     border-bottom-left-radius: 10px;
-    /* Bottom-left corner rounded */
     border-bottom-right-radius: 10px;
-    /* Bottom-right corner rounded */
 }
 
 /* Buttons in the modal */
 .modal-footer .btn {
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    /* Twitter's font style */
     font-size: 12px;
-    /* Small font size */
     padding: 5px 15px;
-    /* Padding for buttons */
     border-radius: 15px;
-    /* Rounded button corners */
 }
 
 /* Primary button styling */
 .modal-footer .btn-outline-primary {
     border-color: #1da1f2;
-    /* Border color */
     color: #1da1f2;
-    /* Text color */
 }
 
 .modal-footer .btn-outline-primary:hover {
     background-color: #1da1f2;
-    /* Blue background on hover */
     color: #fff;
-    /* White text on hover */
 }
 
 /* Secondary button styling */
 .modal-footer .btn-outline-secondary {
     border-color: #657786;
-    /* Gray border color */
     color: #657786;
-    /* Gray text color */
 }
 
 .modal-footer .btn-outline-secondary:hover {
     background-color: #657786;
-    /* Gray background on hover */
     color: #fff;
-    /* White text on hover */
 }
 
-/* Delete button styling */
-.btn-outline-danger {
-    border-color: #dc3545;
-    /* Red border color for the delete button */
-    color: #dc3545;
-    /* Red text color */
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-        /* Font style */
-    font-size: 12px;
-    /* Small font size */
-    border-color: #dc4111;
-    color:red#1da1f2;  
-    border-radius: 15px;
-    /* Rounded button */
-    padding: 5px 10px;
-    /* Padding for the button */
-}
-
-.btn-outline-danger:hover {
-    background-color: #dc3545;
-    /* Red background on hover */
-    color: #fff;
-    /* White text on hover */
-}
-
-.heart-icon {
-    font-size: 24px;
-    color: #969090;
-    /* Default grey color */
-    cursor: pointer;
-    transition: color 0.2s ease-in-out, transform 0.2s ease-in-out;
-}
-
-.heart-icon.liked {
-    color: #ed4956;
-    /* Red color when liked */
-    transform: scale(1.1);
-}
-
-.like-count {
-    font-size: 16px;
-    margin-left: 8px;
-}
-
-.like-button {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-}
-
-.dropdown-menu {
-    min-width: auto;
-    padding: 0;
-}
-
-.dropdown-item {
-    padding: 10px 20px;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.dropdown-item:hover {
-    background-color: #f8f9fa;
-}
-
-.dropdown-item.text-danger {
-    color: #dc3545;
-}
