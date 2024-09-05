@@ -1,5 +1,4 @@
 {% extends "network/layout.html" %}
-
 {% block body %}
 
 
@@ -38,36 +37,99 @@
             });
     }
 
-    function likeHandler(id, whoYouLiked) {
-        const btn = document.getElementById(`${id}`);
+    function deletePost(postId) {
+            // Confirm deletion action
+            if (!confirm('Are you sure you want to delete this post?')) {
+                return;
+            }
 
-        btn.classList.remove('fa-thumbs-up')
-        btn.classList.remove('fa-thumbs-down')
-
-        if (whoYouLiked.indexOf(id) >= 0) {
-            var liked = true;
-
-        } else {
-            var liked = false;
-        }
-
-        if (liked === true){
-            fetch(`/remove_like/${id}`)
-            .then(response => response.json)
-            .then(result => {
-                btn.classList.add('fa-thumbs-up')
+            // Send POST request to delete the post
+            fetch(`/delete_post/${postId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
                 })
-        } else {
-            fetch(`/add_like/${id}`)
-            .then(response => response.json)
-            .then(result => {
-                btn.classList.add('fa-thumbs-down')
+                .then(result => {
+                    if (result.success) {
+                        // Remove the post from the DOM
+                        const postElement = document.getElementById(`post-${postId}`);
+                        postElement.remove();
+                    } else if (result.error) {
+                        console.error(result.error);
+                    }
                 })
+                .catch(error => console.error('Error:', error));
         }
-        liked = !liked
-    }
-
+        
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+            function likeHandler(postId, liked) {
+                const heartIcon = document.getElementById(`heart-icon-${postId}`);
+                const likeCountElem = document.getElementById(`like-count-${postId}`);
+                const url = liked ? `/remove_like/${postId}/` : `/add_like/${postId}/`;
+                const newLikedState = !liked;
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(data => { throw new Error(data.error); });
+                        }
+                        return response.json();
+                    })
+                    .then(result => {
+                        // Update the icon and like count
+                        if (newLikedState) {
+                            heartIcon.classList.remove('fa-regular');
+                            heartIcon.classList.add('fa-solid');
+                        } else {
+                            heartIcon.classList.remove('fa-solid');
+                            heartIcon.classList.add('fa-regular');
+                        }
+                        likeCountElem.textContent = result.like_count;  // Update the count
+                    })
+                    .catch(error => console.error('Fetch error:', error));
+            }
+
+            document.querySelectorAll('.like-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const postId = btn.dataset.postId;
+                    const liked = btn.dataset.liked === 'true';
+                    likeHandler(postId, liked);
+
+                    // Update the data attribute to reflect the new state
+                    btn.dataset.liked = !liked;
+                });
+
+                // Set initial state based on the server-side data
+                const postId = btn.dataset.postId;
+                const liked = btn.dataset.liked === 'true';
+                const heartIcon = document.getElementById(`heart-icon-${postId}`);
+                if (liked) {
+                    heartIcon.classList.remove('fa-regular');
+                    heartIcon.classList.add('fa-solid');
+                } else {
+                    heartIcon.classList.remove('fa-solid');
+                    heartIcon.classList.add('fa-regular');
+                }
+            });
+        });
+</script>
+
 
 
 
@@ -92,6 +154,9 @@
         <p class="date">{{ post.date }}</p>
         {% if user.is_authenticated %}
         {% if user == post.user %}
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-outline-danger btn-sm ml-2" onclick="deletePost({{ post.id }})">Delete</button>
+        </div>
         <div class="d-flex justify-content-end">
             <button class="btn btn-outline-success btn-sm" data-toggle="modal"
                 data-target="#modal_edit_post_{{post.id}}">Edit</button>
@@ -120,15 +185,14 @@
             </div>
         </div>
         {% else %}
-        {% if post.id in whoYouLiked %}
-        <!-- This means that we already liked the post -->
-        <button class="btn btn-info  fa fa-thumbs-down" onclick="likeHandler({{ post.id }}, {{ whoYouLiked }})"
-            id="{{ post.id }}"></button>
-        {% else %}
-        <button class="btn btn-info  fa fa-thumbs-up" onclick="likeHandler({{ post.id }}, {{ whoYouLiked }})"
-            id="{{ post.id }}"></button>
-
-        {% endif %}
+            <button class="like-btn" data-post-id="{{ post.id }}"
+                data-liked="{% if post.id in whoYouLiked %}true{% else %}false{% endif %}">
+                <i id="heart-icon-{{ post.id }}"
+                    class="{% if post.id in whoYouLiked %}fa-solid{% else %}fa-regular{% endif %} fa-heart">
+                </i>
+                <span id="like-count-{{ post.id }}">{{ post.like_count }}</span>
+            </button>
+            
         {% endif %}
         {% endif %}
     </div>

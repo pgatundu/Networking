@@ -14,14 +14,14 @@
                 {% if isFollowing %}
                     <form action="{% url 'unfollow'%}" method="post">                       
                         {% csrf_token %}
-                        <input type="hidden" name="userfollow" value="{{ user_profile }}"/>
-                        <input type="submit" value="Unfollow">
+                        <input  type="hidden" name="userfollow" value="{{ user_profile }}"/>
+                        <input class="btn btn-outline-danger btn-sm" type="submit" value="Unfollow">
                     </form>
                 {% else %}
                     <form action="{% url 'follow' %}" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="userfollow" value="{{ user_profile }}" />
-                        <input type="submit" value="Follow">
+                        <input class="btn btn-outline-success btn-sm" type="submit" value="Follow">
                     </form>
                 {% endif %}
             {% endif %}
@@ -67,16 +67,7 @@
                 </div>
             </div>
         </div>
-        {% else %}
-        {% if post.id in whoYouLiked %}
-        <!-- This means that we already liked the post -->
-        <button class="btn btn-info  fa fa-thumbs-down" onclick="likeHandler({{ post.id }}, {{ whoYouLiked }})"
-            id="{{ post.id }}"></button>
-        {% else %}
-        <button class="btn btn-info  fa fa-thumbs-up" onclick="likeHandler({{ post.id }}, {{ whoYouLiked }})"
-            id="{{ post.id }}"></button>
-
-        {% endif %}
+        
         {% endif %}
         {% endif %}
     </div>
