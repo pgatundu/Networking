@@ -195,3 +195,41 @@ h3 {
     background-color: #657786;
     color: #fff;
 }
+
+/* Style for the heart icon button */
+.like-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+    display:inline-flex;
+    align-items: center;
+    font-size: 18px;
+    /* Adjust icon size */
+}
+
+
+/* Remove any border, padding, or outline from the like button */
+.like-btn {
+    background: none;
+    border: none;
+    outline: none;
+    color: rgb(199, 38, 38);
+
+}
+
+
+
+.like-btn:focus,
+.like-btn:active {
+    outline: none;
+    border: none;
+}
+/* Like count spacing */
+.like-btn span {
+    margin-left: 3px;
+    font-size: 14px;
+    color: #06040d;
+    font-weight: 700;
+}
