@@ -66,6 +66,8 @@ def delete_post(request, post_id):
     
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
+
+
 def index(request):
     allPosts = Post.objects.all().order_by("-id")
     paginator = Paginator(allPosts, 10)
@@ -98,55 +100,64 @@ def newPost(request):
         return HttpResponseRedirect(reverse(index))
 
 def profile(request, user_id):
-  user = User.objects.get(pk=user_id)
-  allPosts = Post.objects.filter(user=user).order_by("id").reverse()
+    user = User.objects.get(pk=user_id)
+    allPosts = Post.objects.filter(user=user).order_by("id").reverse()
 
-  following = Follow.objects.filter(user=user)
-  followers = Follow.objects.filter(user_follower=user)
+    following = Follow.objects.filter(user=user)
+    followers = Follow.objects.filter(user_follower=user)
 
-  try:
-      checkFollow = followers.filter(user=User.objects.get(pk=request.user.id))
-      if len(checkFollow) != 0:
-          isFollowing = True
-      else:
-          isFollowing = False
-      
-  except:
-      isFollowing = False
+    # Check if the current user is following this profile
+    try:
+        checkFollow = followers.filter(user=User.objects.get(pk=request.user.id))
+        if len(checkFollow) != 0:
+            isFollowing = True
+        else:
+            isFollowing = False
+    except:
+        isFollowing = False
 
-  # Paginator
-  paginator = Paginator(allPosts, 10)
-  page_number = request.GET.get('page')
-  posts_of_the_page = paginator.get_page(page_number)
-  return render(request, "network/profile.html",{
-                    "allPosts": allPosts,
-                    "posts_of_the_page": posts_of_the_page,
-                    "username": user.username,
-                    "following": following,
-                    "followers": followers,
-                    "isFollowing": isFollowing,
-                    "user_profile": user
-                })
+    # Determine which posts are liked by the current user
+    liked_posts = Like.objects.filter(user=request.user).values_list('post', flat=True)
+    liked_posts_set = set(liked_posts)  # For quick lookup
 
-def following(request):
-    currentUser = User.objects.get(pk=request.user.id)
-    followingPeople = Follow.objects.filter(user=currentUser)
-    allPosts = Post.objects.all().order_by('id').reverse()
-
-    followingPosts = []
-    for post in allPosts:
-        for person in followingPeople:
-            if person.user_follower == post.user:
-                followingPosts.append(post)
-     # Paginator
-    paginator = Paginator(followingPosts, 10)
+    # Paginator
+    paginator = Paginator(allPosts, 10)
     page_number = request.GET.get('page')
     posts_of_the_page = paginator.get_page(page_number)
 
-    return render(request, "network/following.html",{
-                    "posts_of_the_page": posts_of_the_page,
-                   
-                })
+    return render(request, "network/profile.html", {
+        "allPosts": allPosts,
+        "posts_of_the_page": posts_of_the_page,
+        "username": user.username,
+        "following": following,
+        "followers": followers,
+        "isFollowing": isFollowing,
+        "user_profile": user,
+        "liked_posts_set": liked_posts_set  # Pass the liked posts set to the template
+    })
+
+
+def following(request):
+    currentUser = request.user
+    # Get users that the current user is following
+    following_users = Follow.objects.filter(user_follower=currentUser).values_list('user', flat=True)
+    
+    # Fetch posts from users the current user is following
+    following_posts = Post.objects.filter(user__in=following_users).order_by('-id')
+
+    # Determine which posts are liked by the current user
+    liked_posts = Like.objects.filter(user=currentUser).values_list('post', flat=True)
+    liked_posts_set = set(liked_posts)  # For quick lookup
+
+    # Paginator
+    paginator = Paginator(following_posts, 10)
+    page_number = request.GET.get('page')
+    posts_of_the_page = paginator.get_page(page_number)
+
+    return render(request, "network/following.html", {
+        "posts_of_the_page": posts_of_the_page,
+        "liked_posts_set": liked_posts_set,
+    })
 
 def follow(request):
     userfollow = request.POST['userfollow']
