@@ -17,7 +17,7 @@
 
 
 h3 {
-    font-family:'Helvetica Neue', Arial, sans-serif ;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
     font-size: 24px;
     color: #77aadf;
     text-transform: uppercase;
@@ -29,6 +29,7 @@ h3 {
     display: inline-block;
     padding-bottom: 3px;
 }
+
 /* Container for the entire post */
 .post {
     border: 1px solid #e1e8ed;
@@ -63,104 +64,55 @@ h3 {
     margin-bottom: 10px;
 }
 
-/* Edit button container */
-.d-flex.justify-content-around {
-    margin-top: 10px;
-}
-
-/* Edit button styling */
-.btn-outline-primary.btn-sm {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    /* Font style */
-    font-size: 12px;
-    border-color: #1da1f2;
-    color: #1da1f2;
-    border-radius: 15px;
-    /* Rounded button */
-    padding: 5px 10px;
-    /* Padding for the button */
-}
-
-.btn-outline-primary.btn-sm:hover {
-    background-color: #1da1f2;
-    /* Blue background on hover */
-    color: #ffffff;
-    /* White text on hover */
-}
-/* Modal background */
-.modal-content {
-    border-radius: 10px;
-    /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    /* Subtle shadow */
+.btn {
+    
+    color: rgb(74, 127, 224);
     border: none;
-    /* Remove border */
+    border-radius: 20px;
+    padding: 5px 15px;
 }
 
-/* Modal header */
-.modal-header {
-    background-color: #1da1f2;
-    /* Twitter's blue color */
-    color: #fff;
-    /* White text color */
-    border-bottom: none;
-    /* Remove default border */
-    border-top-left-radius: 10px;
-    /* Top-left corner rounded */
-    border-top-right-radius: 10px;
-    /* Top-right corner rounded */
+.btn-outline-primary {
+    background-color: #d01616;
+    border: 1px solid #1DA1F2;
+    color: #1DA1F2;
 }
 
-/* Modal title */
-.modal-title {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    /* Twitter's font style */
-    font-size: 18px;
-    /* Font size */
+
+.all-posts .post-container {
+    background-color: white;
+    border: 1px solid #E1E8ED;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    transition: box-shadow 0.3s;
+}
+
+.all-posts .post-container:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.username a {
+    color: #1DA1F2;
     font-weight: bold;
-    /* Bold text */
+    text-decoration: none;
 }
 
-/* Close button styling */
-.close {
-    color: #fff;
-    /* White color for the close button */
-    opacity: 1;
-    /* Fully opaque */
+.username a:hover {
+    text-decoration: underline;
 }
-
-.close:hover {
-    color: #ffcccb;
-    /* Light red on hover */
-}
-
-/* Modal body */
-.modal-body {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    /* Twitter's font style */
-    font-size: 14px;
-    /* Font size */
-    color: #14171a;
-    /* Twitter's primary text color */
-}
-
 /* Textarea styling */
 .form-control {
     border-radius: 8px;
-    /* Rounded corners for the textarea */
     border: 1px solid #e1e8ed;
-    /* Light gray border */
     padding: 10px;
-    /* Inner padding */
     font-size: 14px;
-    /* Font size */
     box-shadow: none;
-    /* Remove default shadow */
 }
 
 /* Modal footer */
 .modal-footer {
-    background-color: #f1f1f1;
+    background-color: #9cd6f3;
     border-top: none;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -177,7 +129,7 @@ h3 {
 /* Primary button styling */
 .modal-footer .btn-outline-primary {
     border-color: #1da1f2;
-    color: #1da1f2;
+    color: white;
 }
 
 .modal-footer .btn-outline-primary:hover {
@@ -203,7 +155,7 @@ h3 {
     padding: 0;
     cursor: pointer;
     outline: none;
-    display:inline-flex;
+    display: inline-flex;
     align-items: center;
     font-size: 18px;
     /* Adjust icon size */
@@ -219,13 +171,12 @@ h3 {
 
 }
 
-
-
 .like-btn:focus,
 .like-btn:active {
     outline: none;
     border: none;
 }
+
 /* Like count spacing */
 .like-btn span {
     margin-left: 3px;
@@ -233,3 +184,229 @@ h3 {
     color: #06040d;
     font-weight: 700;
 }
+/* Base styling for the index page */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #F5F8FA;
+    margin: 0;
+    padding: 0;
+}
+
+/* Center container */
+.all-posts {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+
+.post-container:hover {
+    background-color: #F5F8FA;
+}
+
+h3,
+h4 {
+    color: #1DA1F2;
+    font-weight: 20px;
+    font-size: 20px;
+}
+
+.btn {
+    color: rgb(222, 229, 236);
+    border: none;
+    border-radius: 20px;
+    padding: 5px 15px;
+    font-size: 18px;
+}
+
+.btn-outline-primary {
+    background-color: rgb(107, 144, 238);
+    border: 1px solid #32a3ea;
+    color: white;
+    border: none;
+    size: 20%;
+}
+
+
+/* Post content */
+.username a {
+    color: #1DA1F2;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.username a:hover {
+    text-decoration: underline;
+}
+
+.content {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.date {
+    color: #657786;
+    font-size: 14px;
+}
+
+
+
+/* Modal styling */
+.modal-content {
+    border-radius: 10px;
+}
+
+.modal-header {
+    border-bottom: 1px solid #E1E8ED;
+}
+
+.modal-footer {
+    border-top: 1px solid #E1E8ED;
+}
+
+.dropdown-menu {
+    background-color: #fff;
+    border: 1px solid #E1E8ED;
+}
+
+.dropdown-item {
+    font-size: 16px;
+    padding: 10px;
+}
+
+.dropdown-item:hover {
+    background-color: #F5F8FA;
+}
+
+.text-danger {
+    color: #E0245E;
+}
+
+/* Pagination */
+.pagination .page-item .page-link {
+    color: #1DA1F2;
+    border: none;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #1DA1F2;
+    border: none;
+}
+
+/* Ensure the body fills the viewport and sets a background color */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #c7d9f4;
+    align-items: center;
+
+    
+}
+
+/* Center the login form */
+.login-container {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+
+}
+
+/* Style the headings */
+.login-container h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+
+/* Style form inputs */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+
+
+/* Style the submit button */
+.btn-outline-primary {
+    width: 30%;
+    padding: 10px;
+    border-radius: 20px; 
+    font-weight: bold;
+    cursor: pointer;
+    
+}
+
+
+/* Style the registration link */
+.login-container a {
+    color: #9dc1e7;
+    text-decoration: none;
+    
+}
+
+.login-container a:hover {
+    text-decoration: underline;
+}
+
+
+/* Center the registration form */
+.registration-container {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+}
+
+
+/* Style messages */
+.registration-container .message {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #f8d7da;
+    color: #721c24;
+
+}
+
+/* Style form inputs */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+
+/* Style the submit button */
+.btn-primary {
+    width: 50%;
+    padding: 10px;
+    border-radius: 20px;
+    color: #ded2d2;
+    font-weight: bold;
+    cursor: pointer;
+    
+}
+
+
+
